@@ -11,13 +11,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Quran Memorisation Tool</name>
+    <name>QuranMemorisationTool</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>2.1.0</dropwizard.version>
-        <mainClass>com.fyp.Quran Memorisation ToolApplication</mainClass>
+        <mainClass>com.fyp.QuranMemorisationToolApplication</mainClass>
     </properties>
 
     <dependencyManagement>

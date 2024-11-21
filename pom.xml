@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.fyp</groupId>
-    <artifactId>quran-memorisation-tool</artifactId>
+    <artifactId>QMTfypBackend</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <dropwizard.version>2.0.23</dropwizard.version>
-        <mainClass>com.fyp.QMTBackendApplication</mainClass>
+        <mainClass>com.fyp.QMTfypBackendApplication</mainClass>
     </properties>
 
     <dependencyManagement>

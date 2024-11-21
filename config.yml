@@ -2,3 +2,6 @@ logging:
   level: INFO
   loggers:
     com.fyp: DEBUG
+
+swagger:
+  resourcePackage: com.fyp

@@ -18,10 +18,10 @@ import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
-public class QMTBackendApplication extends Application<QMTBackendConfiguration> {
+public class QMTfypBackendApplication extends Application<QMTfypBackendConfiguration> {
 
     public static void main(final String[] args) throws Exception {
-        new QMTBackendApplication().run(args);
+        new QMTfypBackendApplication().run(args);
     }
 
     @Override
@@ -30,17 +30,17 @@ public class QMTBackendApplication extends Application<QMTBackendConfiguration> 
     }
 
     @Override
-    public void initialize(final Bootstrap<QMTBackendConfiguration> bootstrap) {
-        bootstrap.addBundle(new SwaggerBundle<QMTBackendConfiguration>() {
+    public void initialize(final Bootstrap<QMTfypBackendConfiguration> bootstrap) {
+        bootstrap.addBundle(new SwaggerBundle<QMTfypBackendConfiguration>() {
             @Override
-            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(QMTBackendConfiguration configuration) {
+            protected SwaggerBundleConfiguration getSwaggerBundleConfiguration(QMTfypBackendConfiguration configuration) {
                 return configuration.getSwagger();
             }
         });
     }
 
     @Override
-    public void run(final QMTBackendConfiguration configuration,
+    public void run(final QMTfypBackendConfiguration configuration,
                     final Environment environment) {
         // TODO: implement application
         JWTAuthenticator jwtAuthenticator = new JWTAuthenticator(new TokenService(new AuthDao(new DatabaseConnector())));

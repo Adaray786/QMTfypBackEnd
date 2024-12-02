@@ -1,0 +1,35 @@
+package com.fyp.api;
+
+import com.fyp.cli.Surah;
+import com.fyp.db.SurahDao;
+
+import java.util.List;
+
+public class SurahService {
+    private final SurahDao surahDao;
+
+    // Constructor to initialize SurahDao
+    public SurahService(SurahDao surahDao) {
+        this.surahDao = new SurahDao();
+    }
+
+    // Method to retrieve all Surahs
+    public List<Surah> getAllSurahs() {
+        try {
+            return surahDao.getAllSurahs();
+        } catch (Exception e) {
+            System.err.println("Error in getAllSurahs: " + e.getMessage());
+            return null;
+        }
+    }
+
+    // Method to retrieve a Surah by its ID
+    public Surah getSurahById(int surahId) {
+        try {
+            return surahDao.getSurahById(surahId);
+        } catch (Exception e) {
+            System.err.println("Error in getSurahById: " + e.getMessage());
+            return null;
+        }
+    }
+}

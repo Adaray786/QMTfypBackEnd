@@ -19,7 +19,7 @@ public class SurahDao {
         List<Surah> surahs = new ArrayList<>();
         String query = "SELECT * FROM Surahs";
 
-        try (Connection conn = DatabaseConnector.getConnection();
+        try (Connection conn = databaseConnector.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 

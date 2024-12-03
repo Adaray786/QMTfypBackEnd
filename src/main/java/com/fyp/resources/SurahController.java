@@ -4,7 +4,10 @@ import io.swagger.annotations.Api;
 import com.fyp.cli.Surah;
 import com.fyp.api.SurahService;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;

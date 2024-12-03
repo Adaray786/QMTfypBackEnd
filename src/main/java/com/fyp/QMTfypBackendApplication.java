@@ -2,13 +2,16 @@ package com.fyp;
 
 import com.fyp.api.AuthRoleService;
 import com.fyp.api.AuthService;
+import com.fyp.api.SurahService;
 import com.fyp.auth.*;
 import com.fyp.cli.User;
 import com.fyp.db.AuthDao;
 import com.fyp.db.AuthRoleDao;
 import com.fyp.db.DatabaseConnector;
+import com.fyp.db.SurahDao;
 import com.fyp.resources.AuthController;
 import com.fyp.resources.AuthRoleController;
+import com.fyp.resources.SurahController;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -55,6 +58,8 @@ public class QMTfypBackendApplication extends Application<QMTfypBackendConfigura
         environment.jersey().register(RolesAllowedDynamicFeature.class);
 
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+
+        environment.jersey().register(new SurahController(new SurahService(new SurahDao())));
 
     }
 

@@ -66,4 +66,22 @@ public class AyahDao {
         }
         return ayah;
     }
+
+    public int getSurahIdByAyahId(int ayahId) throws SQLException {
+        String query = "SELECT SurahID FROM Ayahs WHERE AyahID = ?";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, ayahId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("SurahID");
+                }
+            }
+        }
+        throw new SQLException("Surah ID not found for Ayah ID: " + ayahId);
+    }
+
 }

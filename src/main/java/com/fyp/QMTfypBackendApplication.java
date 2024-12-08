@@ -1,16 +1,10 @@
 package com.fyp;
 
-import com.fyp.api.AuthRoleService;
-import com.fyp.api.AuthService;
-import com.fyp.api.AyahService;
-import com.fyp.api.SurahService;
+import com.fyp.api.*;
 import com.fyp.auth.*;
 import com.fyp.cli.User;
 import com.fyp.db.*;
-import com.fyp.resources.AuthController;
-import com.fyp.resources.AuthRoleController;
-import com.fyp.resources.AyahController;
-import com.fyp.resources.SurahController;
+import com.fyp.resources.*;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthValueFactoryProvider;
@@ -60,6 +54,10 @@ public class QMTfypBackendApplication extends Application<QMTfypBackendConfigura
 
         environment.jersey().register(new SurahController(new SurahService(new SurahDao())));
         environment.jersey().register(new AyahController(new AyahService(new AyahDao())));
+
+        environment.jersey().register(new UserSurahProgressController(new UserSurahProgressService(new UserSurahProgressDao())));
+        environment.jersey().register(new UserAyahProgressController(new UserAyahProgressService(new UserAyahProgressDao())));
+
 
     }
 

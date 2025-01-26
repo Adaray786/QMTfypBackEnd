@@ -70,4 +70,18 @@ public class UserAyahProgressController {
             return Response.serverError().entity("Failed to retrieve Ayah progress").build();
         }
     }
+
+    @GET
+    @Path("/{userId}/surah/{surahId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAyahProgressBySurahAndUser(@PathParam("userId") int userId, @PathParam("surahId") int surahId) {
+        try {
+            List<UserAyahProgress> progressList = userAyahProgressService.getAyahProgressBySurahAndUser(userId, surahId);
+            return Response.ok(progressList).build();
+        } catch (SQLException e) {
+            return Response.serverError().entity("Failed to fetch Ayah progress for the given User and Surah").build();
+        } catch (FailedToGetAyahProgress e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

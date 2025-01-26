@@ -46,5 +46,8 @@ public class UserAyahProgressService {
         userSurahProgressDao.updateUserSurahProgress(userId, surahId, allMemorized);
     }
 
+    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException, FailedToGetAyahProgress {
+        return userAyahProgressDao.getAyahProgressBySurahAndUser(userId, surahId);
+    }
 
 }

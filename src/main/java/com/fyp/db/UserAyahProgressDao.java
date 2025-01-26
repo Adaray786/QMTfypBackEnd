@@ -107,4 +107,33 @@ public class UserAyahProgressDao {
         return false;
     }
 
+    // Fetch all Ayah progress records for a user given a specific surah
+    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException {
+        List<UserAyahProgress> progressList = new ArrayList<>();
+        String query =
+        "SELECT a.AyahID, a.SurahID, uap.UserID, uap.ProgressID, uap.Is_Memorized " +
+        "FROM Ayahs a " +
+        "LEFT JOIN User_Ayah_Progress uap " +
+        "ON a.AyahID = uap.AyahID AND uap.UserID = ? " +
+        "WHERE a.SurahID = ?";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, surahId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    UserAyahProgress progress = new UserAyahProgress();
+                    progress.setProgressId(rs.getInt("ProgressID"));
+                    progress.setAyahId(rs.getInt("AyahID"));
+                    progress.setUserId(rs.getInt("UserID"));
+                    progress.setMemorized(rs.getBoolean("Is_Memorized"));
+                    progressList.add(progress);
+                }
+            }
+        }
+        return progressList;
+    }
 }

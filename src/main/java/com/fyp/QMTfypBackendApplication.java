@@ -40,6 +40,8 @@ public class QMTfypBackendApplication extends Application<QMTfypBackendConfigura
                     final Environment environment) {
         // TODO: implement application
         JWTAuthenticator jwtAuthenticator = new JWTAuthenticator(new TokenService(new AuthDao(new DatabaseConnector())));
+        // Register CORS filter
+        environment.jersey().register(new CorsFilter());
 
         environment.jersey().register(new AuthDynamicFeature(new JWTFilter.Builder().setAuthenticator(jwtAuthenticator).
                 setAuthorizer(new JWTAuthorizer()).setPrefix("Bearer").buildAuthFilter()));

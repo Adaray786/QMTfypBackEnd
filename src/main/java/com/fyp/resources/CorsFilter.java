@@ -26,17 +26,17 @@ public class CorsFilter implements ContainerResponseFilter {
         // Check if Origin header exists and is in allowed origins
         if (requestOrigin != null && ALLOWED_ORIGINS.contains(requestOrigin)) {
             responseContext.getHeaders().add("Access-Control-Allow-Origin", requestOrigin);
-        }
+            responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
 
-        // Allow CORS headers
-        responseContext.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        responseContext.getHeaders().add("Access-Control-Allow-Headers", "Content-Type, Authorization");
-        responseContext.getHeaders().add("Access-Control-Allow-Credentials", "true");
-
-        // Handle Preflight CORS Requests
-        if ("OPTIONS".equalsIgnoreCase(requestContext.getMethod())) {
-            responseContext.setStatus(Response.Status.OK.getStatusCode());
+            // Handle Preflight CORS Requests
+            if ("OPTIONS".equalsIgnoreCase(requestContext.getMethod())) {
+                responseContext.setStatus(Response.Status.OK.getStatusCode());
+                return; // Return immediately to prevent further processing
+            }
         }
     }
+
 }
 

@@ -12,15 +12,15 @@ import java.util.List;
 
 public class UserAyahProgressService {
 
-    private final UserAyahProgressDao userAyahProgressDao;
-    private final AyahDao ayahDao;
-    private final UserSurahProgressDao userSurahProgressDao;
+    private UserAyahProgressDao userAyahProgressDao;
+    private AyahDao ayahDao;
+    private UserSurahProgressDao userSurahProgressDao;
 
     // Constructor
-    public UserAyahProgressService(UserAyahProgressDao userAyahProgressDao) {
+    public UserAyahProgressService(UserAyahProgressDao userAyahProgressDao, AyahDao ayahDao, UserSurahProgressDao userSurahProgressDao) {
         this.userAyahProgressDao = userAyahProgressDao;
-        ayahDao = new AyahDao();
-        userSurahProgressDao = new UserSurahProgressDao();
+        this.ayahDao = ayahDao;
+        this.userSurahProgressDao = userSurahProgressDao;
     }
 
     // Retrieve Ayah progress by user and Ayah

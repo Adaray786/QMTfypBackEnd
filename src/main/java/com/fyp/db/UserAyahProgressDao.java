@@ -10,7 +10,11 @@ import java.util.List;
 
 public class UserAyahProgressDao {
 
-    private final DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector = new DatabaseConnector();
+
+    public UserAyahProgressDao (DatabaseConnector databaseConnector) {
+        this.databaseConnector = databaseConnector;
+    }
 
     // Create or Update Ayah Progress
     public void createOrUpdateAyahProgress(int userId, int ayahId, boolean isMemorized) throws FailedToInsertAyahProgress {

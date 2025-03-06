@@ -12,7 +12,7 @@ public class AyahDao {
 
     private DatabaseConnector databaseConnector = new DatabaseConnector();
 
-    public AyahDao() {
+    public AyahDao(DatabaseConnector databaseConnector) {
         this.databaseConnector = databaseConnector;
     }
 

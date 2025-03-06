@@ -7,11 +7,11 @@ import com.fyp.db.SurahDao;
 import java.util.List;
 
 public class SurahService {
-    private final SurahDao surahDao;
+    private SurahDao surahDao;
 
     // Constructor to initialize SurahDao
     public SurahService(SurahDao surahDao) {
-        this.surahDao = new SurahDao();
+        this.surahDao = surahDao;
     }
 
     // Method to retrieve all Surahs

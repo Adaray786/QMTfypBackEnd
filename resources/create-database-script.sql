@@ -79,3 +79,31 @@ CREATE TABLE IF NOT EXISTS User_Scores (
     CONSTRAINT FK_UserScoreUser FOREIGN KEY(UserID)
     REFERENCES Users(UserID)
     );
+
+    -- Create the Friends table
+    CREATE TABLE IF NOT EXISTS Friends (
+											FriendshipID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+											User1ID SMALLINT UNSIGNED NOT NULL,
+											User2ID SMALLINT UNSIGNED NOT NULL,
+											Created_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+											PRIMARY KEY(FriendshipID),
+    CONSTRAINT FK_FriendUser1 FOREIGN KEY(User1ID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    CONSTRAINT FK_FriendUser2 FOREIGN KEY(User2ID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    CONSTRAINT UQ_Friendship UNIQUE (User1ID, User2ID)
+	);
+
+	-- Create the Friend_Requests table
+	CREATE TABLE IF NOT EXISTS Friend_Requests (
+											RequestID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+											SenderID SMALLINT UNSIGNED NOT NULL,
+											ReceiverID SMALLINT UNSIGNED NOT NULL,
+											Status ENUM('Pending', 'Accepted', 'Rejected') DEFAULT 'Pending',
+											Sent_At TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY(RequestID),
+    CONSTRAINT FK_RequestSender FOREIGN KEY(SenderID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    CONSTRAINT FK_RequestReceiver FOREIGN KEY(ReceiverID) REFERENCES Users(UserID) ON DELETE CASCADE,
+    CONSTRAINT UQ_FriendRequest UNIQUE (SenderID, ReceiverID)
+);
+
+
+

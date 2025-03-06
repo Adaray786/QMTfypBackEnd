@@ -10,7 +10,7 @@ public class SurahDao {
 
     private  DatabaseConnector databaseConnector = new DatabaseConnector();
 
-    public SurahDao () {
+    public SurahDao (DatabaseConnector databaseConnector) {
         this.databaseConnector=databaseConnector;
     }
 

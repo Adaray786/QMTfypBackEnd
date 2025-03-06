@@ -9,7 +9,11 @@ import java.util.List;
 
 public class UserSurahProgressDao {
 
-    private final DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector = new DatabaseConnector();
+
+    public UserSurahProgressDao (DatabaseConnector databaseConnector) {
+        this.databaseConnector = databaseConnector;
+    }
 
     // Create or Update Surah Progress
     public void createOrUpdateSurahProgress(int userId, int surahId, boolean isMemorized) throws SQLException {

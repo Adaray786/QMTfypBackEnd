@@ -12,7 +12,7 @@ public class AyahService {
 
     // Constructor to initialize AyahDao
     public AyahService(AyahDao ayahDao) {
-        this.ayahDao = new AyahDao();
+        this.ayahDao = ayahDao;
     }
 
     // Method to retrieve Ayahs by Surah ID

@@ -1,6 +1,7 @@
 package com.fyp.db;
 
 import com.fyp.cli.UserAyahProgress;
+import com.fyp.client.FailedToCheckAyahProgressException;
 import com.fyp.client.FailedToGetAyahProgress;
 import com.fyp.client.FailedToInsertAyahProgress;
 
@@ -10,30 +11,41 @@ import java.util.List;
 
 public class UserAyahProgressDao {
 
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
 
     public UserAyahProgressDao (DatabaseConnector databaseConnector) {
         this.databaseConnector = databaseConnector;
     }
 
     // Create or Update Ayah Progress
-    public void createOrUpdateAyahProgress(int userId, int ayahId, boolean isMemorized) throws FailedToInsertAyahProgress {
-        String query =
-            "INSERT INTO User_Ayah_Progress (UserID, AyahID, Is_Memorized) " +
-            "VALUES (?, ?, ?) " +
-            "ON DUPLICATE KEY UPDATE Is_Memorized = ?;"
-        ;
+    public void updateAyahProgress(int userId, int ayahId, boolean isMemorized) throws SQLException {
+        Connection c = databaseConnector.getConnection();
 
-        try (Connection conn = DatabaseConnector.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+        // 1️⃣ Update Ayah Progress
+        String updateProgressQuery = "UPDATE User_Ayah_Progress SET Is_Memorized = ? WHERE UserID = ? AND AyahID = ?";
+        PreparedStatement psProgress = c.prepareStatement(updateProgressQuery);
+        psProgress.setBoolean(1, isMemorized);
+        psProgress.setInt(2, userId);
+        psProgress.setInt(3, ayahId);
+        psProgress.executeUpdate();
 
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, ayahId);
-            pstmt.setBoolean(3, isMemorized);
-            pstmt.setBoolean(4, isMemorized);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new FailedToInsertAyahProgress();
+        // 2️⃣ Only Update Score IF Ayah is Marked as Memorized
+        if (isMemorized) {
+            String getWordCountQuery = "SELECT Word_Count FROM Ayahs WHERE AyahID = ?";
+            PreparedStatement psWordCount = c.prepareStatement(getWordCountQuery);
+            psWordCount.setInt(1, ayahId);
+            ResultSet rs = psWordCount.executeQuery();
+
+            if (rs.next()) {
+                int wordCount = rs.getInt("Word_Count");
+
+                // 3️⃣ Increment the User's Score
+                String updateScoreQuery = "UPDATE User_Scores SET Total_Score = Total_Score + ? WHERE UserID = ?";
+                PreparedStatement psUpdateScore = c.prepareStatement(updateScoreQuery);
+                psUpdateScore.setInt(1, wordCount);
+                psUpdateScore.setInt(2, userId);
+                psUpdateScore.executeUpdate();
+            }
         }
     }
 
@@ -88,31 +100,8 @@ public class UserAyahProgressDao {
         return progressList;
     }
 
-    public boolean areAllAyahsMemorized(int userId, int surahId) throws SQLException {
-        String query =
-        "SELECT COUNT(*) AS UnmemorizedCount " +
-        "FROM Ayahs a " +
-        "LEFT JOIN User_Ayah_Progress uap " +
-        "ON a.AyahID = uap.AyahID AND uap.UserID = ? " +
-        "WHERE a.SurahID = ? AND (uap.Is_Memorized IS NULL OR uap.Is_Memorized = FALSE)";
-
-        try (Connection conn = databaseConnector.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-
-            pstmt.setInt(1, userId);
-            pstmt.setInt(2, surahId);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt("UnmemorizedCount") == 0;
-                }
-            }
-        }
-        return false;
-    }
-
     // Fetch all Ayah progress records for a user given a specific surah
-    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException {
+    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException, FailedToCheckAyahProgressException {
         List<UserAyahProgress> progressList = new ArrayList<>();
         String query =
         "SELECT a.AyahID, a.SurahID, uap.UserID, uap.ProgressID, uap.Is_Memorized " +
@@ -137,6 +126,9 @@ public class UserAyahProgressDao {
                     progressList.add(progress);
                 }
             }
+        } catch (SQLException e) {
+            System.err.println("Error fetching User Ayah Progress: " + e.getMessage());
+            throw new FailedToCheckAyahProgressException();
         }
         return progressList;
     }

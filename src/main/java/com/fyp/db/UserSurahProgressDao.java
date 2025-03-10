@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UserSurahProgressDao {
 
-    private DatabaseConnector databaseConnector = new DatabaseConnector();
+    private DatabaseConnector databaseConnector;
 
     public UserSurahProgressDao (DatabaseConnector databaseConnector) {
         this.databaseConnector = databaseConnector;

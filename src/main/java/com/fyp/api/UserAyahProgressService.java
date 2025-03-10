@@ -1,6 +1,7 @@
 package com.fyp.api;
 
 import com.fyp.cli.UserAyahProgress;
+import com.fyp.client.FailedToCheckAyahProgressException;
 import com.fyp.client.FailedToGetAyahProgress;
 import com.fyp.client.FailedToInsertAyahProgress;
 import com.fyp.db.AyahDao;
@@ -13,14 +14,10 @@ import java.util.List;
 public class UserAyahProgressService {
 
     private UserAyahProgressDao userAyahProgressDao;
-    private AyahDao ayahDao;
-    private UserSurahProgressDao userSurahProgressDao;
 
     // Constructor
-    public UserAyahProgressService(UserAyahProgressDao userAyahProgressDao, AyahDao ayahDao, UserSurahProgressDao userSurahProgressDao) {
+    public UserAyahProgressService(UserAyahProgressDao userAyahProgressDao) {
         this.userAyahProgressDao = userAyahProgressDao;
-        this.ayahDao = ayahDao;
-        this.userSurahProgressDao = userSurahProgressDao;
     }
 
     // Retrieve Ayah progress by user and Ayah
@@ -33,20 +30,11 @@ public class UserAyahProgressService {
         return userAyahProgressDao.getAllAyahProgressByUser(userId);
     }
 
-    public void upsertUserAyahProgress(int userId, int ayahId, boolean isMemorized) throws SQLException, FailedToInsertAyahProgress {
-        userAyahProgressDao.createOrUpdateAyahProgress(userId, ayahId, isMemorized);
-
-        // Fetch Surah ID associated with this Ayah
-        int surahId = ayahDao.getSurahIdByAyahId(ayahId);
-
-        // Check if all Ayahs in the Surah are memorized
-        boolean allMemorized = userAyahProgressDao.areAllAyahsMemorized(userId, surahId);
-
-        // Update Surah progress accordingly
-        userSurahProgressDao.updateUserSurahProgress(userId, surahId, allMemorized);
+    public void upsertUserAyahProgress(int userId, int ayahId, boolean isMemorized) throws SQLException, FailedToInsertAyahProgress, FailedToCheckAyahProgressException {
+        userAyahProgressDao.updateAyahProgress(userId, ayahId, isMemorized);
     }
 
-    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException, FailedToGetAyahProgress {
+    public List<UserAyahProgress> getAyahProgressBySurahAndUser(int userId, int surahId) throws SQLException, FailedToGetAyahProgress, FailedToCheckAyahProgressException {
         return userAyahProgressDao.getAyahProgressBySurahAndUser(userId, surahId);
     }
 

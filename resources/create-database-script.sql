@@ -72,13 +72,11 @@ CREATE TABLE IF NOT EXISTS User_Surah_Progress (
 
 -- Create the User_Scores table
 CREATE TABLE IF NOT EXISTS User_Scores (
-                                           ScoreID INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                                           UserID SMALLINT UNSIGNED NOT NULL,
-                                           Total_Score INT UNSIGNED DEFAULT 0,
-                                           PRIMARY KEY(ScoreID),
-    CONSTRAINT FK_UserScoreUser FOREIGN KEY(UserID)
-    REFERENCES Users(UserID)
-    );
+    UserID SMALLINT UNSIGNED NOT NULL,
+    Total_Score INT UNSIGNED DEFAULT 0,
+    PRIMARY KEY(UserID),
+    CONSTRAINT FK_UserScoreUser FOREIGN KEY(UserID) REFERENCES Users(UserID) ON DELETE CASCADE
+);
 
     -- Create the Friends table
     CREATE TABLE IF NOT EXISTS Friends (

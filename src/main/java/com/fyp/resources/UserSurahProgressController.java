@@ -1,9 +1,13 @@
 package com.fyp.resources;
 
+import com.fyp.cli.User;
+import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import com.fyp.api.UserSurahProgressService;
 import com.fyp.cli.UserSurahProgress;
 import com.fyp.client.FailedToGetSurahProgress;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -27,8 +31,22 @@ public class UserSurahProgressController {
     @Path("/upsert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response upsertSurahProgress(UserSurahProgress userSurahProgress) {
+    @ApiOperation(value = "Get list of friends", authorizations = {
+            @Authorization(value = "Authorization")
+    })
+    public Response upsertSurahProgress(
+            @Auth User user,
+            UserSurahProgress userSurahProgress) {
         try {
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("Authentication required").build();
+            }
+
+            if (user.getUserId() != userSurahProgress.getUserId()) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("You are not authorized to access this user's Surah progress").build();
+            }
             userSurahProgressService.createOrUpdateSurahProgress(
                     userSurahProgress.getUserId(),
                     userSurahProgress.getSurahId(),
@@ -46,8 +64,23 @@ public class UserSurahProgressController {
     @GET
     @Path("/{userId}/{surahId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getSurahProgress(@PathParam("userId") int userId, @PathParam("surahId") int surahId) {
+    @ApiOperation(value = "Get list of friends", authorizations = {
+            @Authorization(value = "Authorization")
+    })
+    public Response getSurahProgress(
+            @Auth User user,
+            @PathParam("userId") int userId,
+            @PathParam("surahId") int surahId) {
         try {
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("Authentication required").build();
+            }
+
+            if (user.getUserId() != userId) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("You are not authorized to access this user's Surah progress").build();
+            }
             UserSurahProgress progress = userSurahProgressService.getUserSurahProgress(userId, surahId);
             return progress != null
                     ? Response.ok(progress).build()
@@ -61,8 +94,22 @@ public class UserSurahProgressController {
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllSurahProgressByUser(@PathParam("userId") int userId) {
+    @ApiOperation(value = "Get list of friends", authorizations = {
+            @Authorization(value = "Authorization")
+    })
+    public Response getAllSurahProgressByUser(
+            @Auth User user,
+            @PathParam("userId") int userId) {
         try {
+            if (user == null) {
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity("Authentication required").build();
+            }
+
+            if (user.getUserId() != userId) {
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("You are not authorized to access this user's Surah progress").build();
+            }
             List<UserSurahProgress> progressList = userSurahProgressService.getAllSurahProgressByUser(userId);
             return Response.ok(progressList).build();
         } catch (FailedToGetSurahProgress e) {

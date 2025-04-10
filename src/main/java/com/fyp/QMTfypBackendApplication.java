@@ -63,7 +63,16 @@ public class QMTfypBackendApplication extends Application<QMTfypBackendConfigura
         environment.jersey().register(new UserAyahProgressController(new UserAyahProgressService(new UserAyahProgressDao(new DatabaseConnector()))));
         environment.jersey().register(new FriendController(new FriendService(new FriendDao(new DatabaseConnector()))));
 
-
+        // Register Challenge Controller
+        DatabaseConnector dbConnector = new DatabaseConnector();
+        environment.jersey().register(new ChallengeController(
+            new ChallengeService(
+                new ChallengeRequestDao(dbConnector),
+                new ActiveChallengeDao(dbConnector),
+                new CompletedChallengeDao(dbConnector),
+                new UserSurahProgressDao(dbConnector)
+            )
+        ));
     }
 
 }

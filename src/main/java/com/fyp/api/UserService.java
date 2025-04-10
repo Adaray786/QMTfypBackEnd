@@ -18,4 +18,10 @@ public class UserService {
     public List<User> searchUsers(String query, int currentUserId) throws SQLException {
         return userDao.searchUsers(query, currentUserId);
     }
+
+    // ✅ Get User by ID
+    public User getUserById(int userId) throws SQLException {
+        return userDao.getUserById(userId);
+    }
 }
+

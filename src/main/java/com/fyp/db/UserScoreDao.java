@@ -13,6 +13,10 @@ public class UserScoreDao {
         this.databaseConnector = databaseConnector;
     }
 
+    public DatabaseConnector getDatabaseConnector() {
+        return databaseConnector;
+    }
+
     // ✅ Get User's Total Score
     public int getUserScore(int userId) throws SQLException {
         String query = "SELECT Total_Score FROM User_Scores WHERE UserID = ?";
@@ -36,3 +40,4 @@ public class UserScoreDao {
     }
 
 }
+

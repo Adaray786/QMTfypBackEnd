@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.SQLException;
+import java.util.Map;
 
 @Api("User Scores API")
 @Path("/api/scores")
@@ -39,4 +40,20 @@ public class UserScoreController {
             return Response.serverError().entity("Error retrieving user score.").build();
         }
     }
+
+    // ✅ Retrieve Friends' Scores
+    @GET
+    @Path("/friends")
+    @ApiOperation(value = "Get friends' scores", authorizations = {
+            @Authorization(value = "Authorization")
+    })
+    public Response getFriendsScores(@Auth User user) {
+        try {
+            Map<Integer, Integer> friendsScores = userScoreService.getFriendsScores(user.getUserId());
+            return Response.ok().entity(friendsScores).build();
+        } catch (SQLException e) {
+            return Response.serverError().entity("Error retrieving friends' scores.").build();
+        }
+    }
 }
+

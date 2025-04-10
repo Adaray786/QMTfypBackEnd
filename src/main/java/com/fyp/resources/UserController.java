@@ -38,4 +38,25 @@ public class UserController {
             return Response.serverError().entity("Error searching users.").build();
         }
     }
+
+    @GET
+    @Path("/{userId}")
+    @ApiOperation(value = "Get user details by ID", authorizations = {
+            @Authorization(value = "Authorization")
+    })
+    public Response getUserById(
+            @Auth User user,
+            @PathParam("userId") int userId
+    ) {
+        try {
+            User userDetails = userService.getUserById(userId);
+            if (userDetails == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("User not found").build();
+            }
+            return Response.ok().entity(userDetails).build();
+        } catch (SQLException e) {
+            return Response.serverError().entity("Error retrieving user details.").build();
+        }
     }
+}

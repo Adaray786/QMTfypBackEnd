@@ -38,4 +38,26 @@ public class UserDao {
         }
         return users;
     }
+
+    // ✅ Get User by ID
+    public User getUserById(int userId) throws SQLException {
+        Connection c = databaseConnector.getConnection();
+        String sql = "SELECT UserID, Email FROM Users WHERE UserID = ?";
+
+        try (PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("UserID"),
+                        rs.getString("Email"),
+                        null
+                );
+            }
+        }
+
+        return null; // Return null if user not found
+    }
 }
+

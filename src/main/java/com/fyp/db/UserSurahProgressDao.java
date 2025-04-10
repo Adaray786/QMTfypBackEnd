@@ -103,4 +103,22 @@ public class UserSurahProgressDao {
         }
     }
 
+    public boolean hasUserMemorizedSurah(int userId, int surahId) throws SQLException {
+        String query = "SELECT Is_Memorized FROM User_Surah_Progress WHERE UserID = ? AND SurahID = ?";
+        
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, surahId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBoolean("Is_Memorized");
+                }
+            }
+        }
+        return false; // If no record found, assume not memorized
+    }
+
 }

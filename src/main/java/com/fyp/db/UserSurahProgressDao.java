@@ -50,7 +50,8 @@ public class UserSurahProgressDao {
                             rs.getInt("ProgressID"),
                             rs.getInt("UserID"),
                             rs.getInt("SurahID"),
-                            rs.getBoolean("Is_Memorized")
+                            rs.getBoolean("Is_Memorized"),
+                            rs.getString("Last_Revised_At")
                     );
                 }
             }
@@ -75,7 +76,8 @@ public class UserSurahProgressDao {
                             rs.getInt("ProgressID"),
                             rs.getInt("UserID"),
                             rs.getInt("SurahID"),
-                            rs.getBoolean("Is_Memorized")
+                            rs.getBoolean("Is_Memorized"),
+                            rs.getString("Last_Revised_At")
                     ));
                 }
             }
@@ -87,13 +89,13 @@ public class UserSurahProgressDao {
 
     public void updateUserSurahProgress(int userId, int surahId, boolean isMemorized) throws SQLException {
         String query =
-                "INSERT INTO User_Surah_Progress (UserID, SurahID, Is_Memorized) " +
-                        "VALUES (?, ?, ?) " +
-                        "ON DUPLICATE KEY UPDATE Is_Memorized = ?;";
-
+                "INSERT INTO User_Surah_Progress (UserID, SurahID, Is_Memorized, Last_Revised_At) " +
+                        "VALUES (?, ?, ?, CURRENT_TIMESTAMP) " +
+                        "ON DUPLICATE KEY UPDATE Is_Memorized = ?, Last_Revised_At = CURRENT_TIMESTAMP;";
+         
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
+            
             pstmt.setInt(1, userId);
             pstmt.setInt(2, surahId);
             pstmt.setBoolean(3, isMemorized);
@@ -121,4 +123,17 @@ public class UserSurahProgressDao {
         return false; // If no record found, assume not memorized
     }
 
+    public void updateLastRevised(int userId, int surahId) throws SQLException {
+        String query = "UPDATE User_Surah_Progress " +
+                      "SET Last_Revised_At = CURRENT_TIMESTAMP " +
+                      "WHERE UserID = ? AND SurahID = ?";
+        
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, surahId);
+            pstmt.executeUpdate();
+        }
+    }
 }

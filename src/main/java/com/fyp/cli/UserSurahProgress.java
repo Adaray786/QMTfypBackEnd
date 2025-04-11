@@ -5,16 +5,15 @@ public class UserSurahProgress {
     private int userId;        // UserID field
     private int surahId;       // SurahID field
     private boolean isMemorized; // Is_Memorized field
+    private String lastRevisedAt; // Last_Revised_At field
 
-    // Constructors
-    public UserSurahProgress() {
-    }
 
-    public UserSurahProgress(int progressId, int userId, int surahId, boolean isMemorized) {
+    public UserSurahProgress(int progressId, int userId, int surahId, boolean isMemorized, String lastRevisedAt) {
         this.progressId = progressId;
         this.userId = userId;
         this.surahId = surahId;
         this.isMemorized = isMemorized;
+        this.lastRevisedAt = lastRevisedAt;
     }
 
     // Getters and Setters
@@ -50,6 +49,14 @@ public class UserSurahProgress {
         isMemorized = memorized;
     }
 
+    public String getLastRevisedAt() {
+        return lastRevisedAt;
+    }
+
+    public void setLastRevisedAt(String lastRevisedAt) {
+        this.lastRevisedAt = lastRevisedAt;
+    }
+
     // toString() for Debugging
     @Override
     public String toString() {
@@ -58,6 +65,7 @@ public class UserSurahProgress {
                 ", userId=" + userId +
                 ", surahId=" + surahId +
                 ", isMemorized=" + isMemorized +
+                ", lastRevisedAt='" + lastRevisedAt + '\'' +
                 '}';
     }
 }

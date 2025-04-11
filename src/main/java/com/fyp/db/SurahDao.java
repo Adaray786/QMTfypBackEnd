@@ -61,5 +61,42 @@ public class SurahDao {
         return surah;
     }
 
+    // Method to get surah name by ID
+    public String getSurahName(int surahId) {
+        String query = "SELECT Surah_Name_English FROM Surahs WHERE SurahID = ?";
+        
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, surahId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("Surah_Name_English");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching surah name: " + e.getMessage());
+        }
+        return null;
+    }
+
+    // Method to get total number of ayahs for a surah
+    public int getAyahCount(int surahId) {
+        String query = "SELECT Total_Ayahs FROM Surahs WHERE SurahID = ?";
+        
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, surahId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("Total_Ayahs");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching ayah count: " + e.getMessage());
+        }
+        return 0; // Return 0 if surah not found or error occurs
+    }
 }
 

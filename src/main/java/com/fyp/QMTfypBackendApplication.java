@@ -73,6 +73,14 @@ public class QMTfypBackendApplication extends Application<QMTfypBackendConfigura
                 new UserSurahProgressDao(dbConnector)
             )
         ));
+
+        // Register Recommendation Controller
+        environment.jersey().register(new RecommendationController(
+            new RecommendationService(
+                new RecommendationDao(new DatabaseConnector()),
+                new SurahDao(new DatabaseConnector())
+            )
+        ));
     }
 
 }

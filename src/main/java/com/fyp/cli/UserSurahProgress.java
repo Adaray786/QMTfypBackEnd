@@ -7,6 +7,9 @@ public class UserSurahProgress {
     private boolean isMemorized; // Is_Memorized field
     private String lastRevisedAt; // Last_Revised_At field
 
+    // Default constructor for JSON deserialization
+    public UserSurahProgress() {
+    }
 
     public UserSurahProgress(int progressId, int userId, int surahId, boolean isMemorized, String lastRevisedAt) {
         this.progressId = progressId;

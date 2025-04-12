@@ -31,7 +31,7 @@ public class UserSurahProgressController {
     @Path("/upsert")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Get list of friends", authorizations = {
+    @ApiOperation(value = "Update surah progress", authorizations = {
             @Authorization(value = "Authorization")
     })
     public Response upsertSurahProgress(
@@ -47,10 +47,10 @@ public class UserSurahProgressController {
                 return Response.status(Response.Status.FORBIDDEN)
                         .entity("You are not authorized to access this user's Surah progress").build();
             }
+
             userSurahProgressService.createOrUpdateSurahProgress(
                     userSurahProgress.getUserId(),
-                    userSurahProgress.getSurahId(),
-                    userSurahProgress.isMemorized()
+                    userSurahProgress.getSurahId()
             );
             return Response.ok("Surah progress updated successfully").build();
         } catch (FailedToGetSurahProgress e) {

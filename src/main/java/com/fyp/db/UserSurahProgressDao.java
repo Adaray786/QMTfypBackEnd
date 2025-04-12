@@ -16,11 +16,11 @@ public class UserSurahProgressDao {
     }
 
     // Create or Update Surah Progress
-    public void createOrUpdateSurahProgress(int userId, int surahId, boolean isMemorized) throws SQLException {
+    public void createOrUpdateSurahProgress(int userId, int surahId) throws SQLException {
         String query =
-            "INSERT INTO User_Surah_Progress (UserID, SurahID, Is_Memorized) " +
-            "VALUES (?, ?, ?) " +
-            "ON DUPLICATE KEY UPDATE Is_Memorized = ?;"
+            "UPDATE User_Surah_Progress " +
+            "SET Is_Memorized = true, Last_Revised_At = CURRENT_TIMESTAMP " +
+            "WHERE UserID = ? AND SurahID = ?;"
         ;
 
         try (Connection conn = DatabaseConnector.getConnection();
@@ -28,8 +28,6 @@ public class UserSurahProgressDao {
 
             pstmt.setInt(1, userId);
             pstmt.setInt(2, surahId);
-            pstmt.setBoolean(3, isMemorized);
-            pstmt.setBoolean(4, isMemorized);
             pstmt.executeUpdate();
         }
     }

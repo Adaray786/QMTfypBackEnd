@@ -17,8 +17,8 @@ public class UserSurahProgressService {
     }
 
     // Create or update Surah progress
-    public void createOrUpdateSurahProgress(int userId, int surahId, boolean isMemorized) throws FailedToGetSurahProgress, SQLException {
-        userSurahProgressDao.createOrUpdateSurahProgress(userId, surahId, isMemorized);
+    public void createOrUpdateSurahProgress(int userId, int surahId) throws FailedToGetSurahProgress, SQLException {
+        userSurahProgressDao.createOrUpdateSurahProgress(userId, surahId);
     }
 
     // Retrieve Surah progress by user and Surah

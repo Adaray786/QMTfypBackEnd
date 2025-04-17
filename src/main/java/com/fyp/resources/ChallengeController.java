@@ -5,6 +5,9 @@ import com.fyp.cli.ChallengeRequest;
 import com.fyp.cli.ActiveChallenge;
 import com.fyp.cli.CompletedChallenge;
 import com.fyp.cli.User;
+import com.fyp.client.ChallengeAlreadyMemorisedException;
+import com.fyp.client.ChallengeNotFoundException;
+import com.fyp.client.InvalidChallengeParticipantException;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +47,8 @@ public class ChallengeController {
                 .entity(e.getMessage()).build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error sending challenge request").build();
+        } catch (ChallengeAlreadyMemorisedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -140,6 +145,10 @@ public class ChallengeController {
                 .entity(e.getMessage()).build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error marking challenge as won").build();
+        } catch (InvalidChallengeParticipantException e) {
+            throw new RuntimeException(e);
+        } catch (ChallengeNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 

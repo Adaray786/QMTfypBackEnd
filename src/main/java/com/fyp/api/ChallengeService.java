@@ -7,6 +7,10 @@ import com.fyp.db.ChallengeRequestDao;
 import com.fyp.db.ActiveChallengeDao;
 import com.fyp.db.CompletedChallengeDao;
 import com.fyp.db.UserSurahProgressDao;
+import com.fyp.client.ChallengeAlreadyMemorisedException;
+import com.fyp.client.ChallengeNotFoundException;
+import com.fyp.client.InvalidChallengeParticipantException;
+
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,14 +31,16 @@ public class ChallengeService {
         this.userSurahProgressDao = userSurahProgressDao;
     }
 
-    public void sendChallengeRequest(int senderId, int receiverId, int surahId) throws SQLException {
-        // Check if either user has already memorized the Surah
+    public void sendChallengeRequest(int senderId, int receiverId, int surahId)
+            throws SQLException, ChallengeAlreadyMemorisedException {
+
         if (hasUserMemorizedSurah(senderId, surahId) || hasUserMemorizedSurah(receiverId, surahId)) {
-            throw new IllegalArgumentException("One or both users have already memorized this Surah");
+            throw new ChallengeAlreadyMemorisedException("One or both users have already memorized this Surah");
         }
-        
+
         challengeRequestDao.sendChallengeRequest(senderId, receiverId, surahId);
     }
+
 
     public void acceptChallengeRequest(int requestId) throws SQLException {
         challengeRequestDao.acceptChallengeRequest(requestId);
@@ -56,31 +62,30 @@ public class ChallengeService {
         return completedChallengeDao.getCompletedChallenges(userId);
     }
 
-    public void winChallenge(int challengeId, int winnerId) throws SQLException {
-        // Get the active challenge details
+    public void winChallenge(int challengeId, int winnerId)
+            throws SQLException, ChallengeNotFoundException, InvalidChallengeParticipantException {
+
         ActiveChallenge challenge = activeChallengeDao.getActiveChallengeById(challengeId);
-        
+
         if (challenge == null) {
-            throw new IllegalArgumentException("Challenge not found");
+            throw new ChallengeNotFoundException("Challenge not found with ID: " + challengeId);
         }
-        
-        // Verify that the winner is one of the participants
+
         if (challenge.getUser1Id() != winnerId && challenge.getUser2Id() != winnerId) {
-            throw new IllegalArgumentException("User is not a participant in this challenge");
+            throw new InvalidChallengeParticipantException("User is not a participant in this challenge");
         }
-        
-        // Move the challenge to completed challenges
+
         completedChallengeDao.createCompletedChallenge(
-            challenge.getUser1Id(),
-            challenge.getUser2Id(),
-            challenge.getSurahId(),
-            winnerId,
-            challenge.getStartedAt()
+                challenge.getUser1Id(),
+                challenge.getUser2Id(),
+                challenge.getSurahId(),
+                winnerId,
+                challenge.getStartedAt()
         );
-        
-        // Remove from active challenges
+
         activeChallengeDao.removeActiveChallenge(challengeId);
     }
+
 
     private boolean hasUserMemorizedSurah(int userId, int surahId) throws SQLException {
         // This method would check if the user has already memorized the Surah

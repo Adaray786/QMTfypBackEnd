@@ -95,17 +95,16 @@ public class RecommendationDao {
     }
 
     // Update last revised timestamp for a surah
-    public void updateLastRevised(int userId, int surahId) {
+    public void updateLastRevised(int userId, int surahId) throws SQLException {
         String query = "UPDATE User_Surah_Progress SET Last_Revised_At = CURRENT_TIMESTAMP WHERE UserID = ? AND SurahID = ?";
-        
+
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
+
             pstmt.setInt(1, userId);
             pstmt.setInt(2, surahId);
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.err.println("Error updating last revised timestamp: " + e.getMessage());
         }
     }
+
 } 

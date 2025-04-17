@@ -40,7 +40,7 @@ public class UserAyahProgressController {
             UserAyahProgress userAyahProgress) {
         try {
             // ✅ Authorization Check: Ensure the authenticated user matches the userId in the request
-            if (authenticatedUser.getUserId() != userAyahProgress.getUserId()) {
+            if (authenticatedUser == null || authenticatedUser.getUserId() != userAyahProgress.getUserId()) {
                 return Response.status(Response.Status.FORBIDDEN)
                         .entity("You are not authorized to update this user's Ayah progress").build();
             }

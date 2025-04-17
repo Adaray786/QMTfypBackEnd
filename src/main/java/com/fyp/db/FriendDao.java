@@ -27,10 +27,10 @@ public class FriendDao {
     }
 
     // ✅ **Accept a Friend Request**
-    public void acceptFriendRequest(int requestId) throws SQLException {
+    public int acceptFriendRequest(int requestId) throws SQLException {
         Connection c = databaseConnector.getConnection();
 
-        // Get sender and receiver IDs from request
+        // Get sender and receiver IDs from the friend request
         PreparedStatement ps = c.prepareStatement(
                 "SELECT SenderID, ReceiverID FROM Friend_Requests WHERE RequestID = ?"
         );
@@ -49,27 +49,31 @@ public class FriendDao {
             insertFriend.setInt(2, receiverId);
             insertFriend.executeUpdate();
 
-            // Update Friend Request status to 'Accepted'
+            // Update request status
             PreparedStatement updateRequest = c.prepareStatement(
                     "UPDATE Friend_Requests SET Status = 'Accepted' WHERE RequestID = ?"
             );
             updateRequest.setInt(1, requestId);
-            updateRequest.executeUpdate();
+            return updateRequest.executeUpdate(); // returns number of rows affected
+        } else {
+            return 0; // no such friend request found
         }
     }
 
+
     // ✅ **Reject a Friend Request**
-    public void rejectFriendRequest(int requestId) throws SQLException {
+    public int rejectFriendRequest(int requestId) throws SQLException {
         Connection c = databaseConnector.getConnection();
         PreparedStatement ps = c.prepareStatement(
                 "UPDATE Friend_Requests SET Status = 'Rejected' WHERE RequestID = ?"
         );
         ps.setInt(1, requestId);
-        ps.executeUpdate();
+
+        return ps.executeUpdate();
     }
 
     // ✅ **Remove a Friend**
-    public void removeFriend(int userId, int friendId) throws SQLException {
+    public int removeFriend(int userId, int friendId) throws SQLException {
         Connection c = databaseConnector.getConnection();
         PreparedStatement ps = c.prepareStatement(
                 "DELETE FROM Friends WHERE (User1ID = ? AND User2ID = ?) OR (User1ID = ? AND User2ID = ?)"
@@ -78,7 +82,8 @@ public class FriendDao {
         ps.setInt(2, friendId);
         ps.setInt(3, friendId);
         ps.setInt(4, userId);
-        ps.executeUpdate();
+
+        return ps.executeUpdate();
     }
 
     // ✅ **Get Pending Friend Requests**

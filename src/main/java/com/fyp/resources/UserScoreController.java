@@ -2,6 +2,8 @@ package com.fyp.resources;
 
 import com.fyp.api.UserScoreService;
 import com.fyp.cli.User;
+import com.fyp.client.FailedToGetFriendsScoresException;
+import com.fyp.client.FailedToGetUserScoreException;
 import io.dropwizard.auth.Auth;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,8 +38,8 @@ public class UserScoreController {
             int score = userScoreService.getUserScore(user.getUserId());
             System.out.printf(String.valueOf(score));
             return Response.ok().entity(score).build();
-        } catch (SQLException e) {
-            return Response.serverError().entity("Error retrieving user score.").build();
+        } catch (FailedToGetUserScoreException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,7 +53,7 @@ public class UserScoreController {
         try {
             Map<Integer, Integer> friendsScores = userScoreService.getFriendsScores(user.getUserId());
             return Response.ok().entity(friendsScores).build();
-        } catch (SQLException e) {
+        } catch (FailedToGetFriendsScoresException e) {
             return Response.serverError().entity("Error retrieving friends' scores.").build();
         }
     }

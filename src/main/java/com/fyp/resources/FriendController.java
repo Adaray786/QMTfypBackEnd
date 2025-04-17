@@ -4,6 +4,9 @@ import com.fyp.api.FriendService;
 import com.fyp.cli.Friend;
 import com.fyp.cli.FriendRequest;
 import com.fyp.cli.User;
+import com.fyp.client.FriendNotFoundException;
+import com.fyp.client.FriendRequestAlreadyExistsException;
+import com.fyp.client.FriendRequestNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -41,6 +44,8 @@ public class FriendController {
             return Response.ok().entity("Friend request sent to user " + receiverId).build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error sending friend request.").build();
+        } catch (FriendRequestAlreadyExistsException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -56,6 +61,8 @@ public class FriendController {
             return Response.ok().entity("Friend request accepted.").build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error accepting friend request.").build();
+        } catch (FriendRequestNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,6 +78,8 @@ public class FriendController {
             return Response.ok().entity("Friend request rejected.").build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error rejecting friend request.").build();
+        } catch (FriendRequestNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -86,6 +95,8 @@ public class FriendController {
             return Response.ok().entity("Friend removed successfully.").build();
         } catch (SQLException e) {
             return Response.serverError().entity("Error removing friend.").build();
+        } catch (FriendNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
